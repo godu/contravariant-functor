@@ -1,4 +1,4 @@
-import { concat, map, findLastIndex, includes, reverse, pipe, sortBy } from 'lodash/fp';
+import { concat, map, findLastIndex, includes, reverse, pipe } from 'lodash/fp';
 import { Content, Id } from './type';
 
 type Compare<T> = (x: T, y: T) => number
@@ -19,10 +19,11 @@ export const sortByContentRef = (hits: Content[], refsInOrder: Id[] = []): Conte
   const compareContent = contraMapCompare(
     pipe(
       getContentRefs,
-      getSortingScore(refsInOrder)
+      getSortingScore(refsInOrder),
+      score => -score
     ),
     compareNumber
   );
 
-  return hits.reverse().sort(compareContent).reverse();
+  return hits.sort(compareContent);
 };

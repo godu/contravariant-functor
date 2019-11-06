@@ -12,12 +12,11 @@ const getSortingScore = (refsInOrder: Id[]) => (contentRefs: Id[]): number =>
 
 export const sortByContentRef = (hits: Content[], refsInOrder: Id[] = []): Content[] =>
   pipe(
-    reverse,
     sortBy(
       pipe(
         getContentRefs,
-        getSortingScore(refsInOrder)
+        getSortingScore(refsInOrder),
+        score => -score
       )
-    ),
-    reverse
+    )
   )(hits);

@@ -1,4 +1,4 @@
-import { concat, map, findLastIndex, includes, reverse, pipe, sortBy } from 'lodash/fp';
+import { concat, map, findLastIndex, includes, reverse, pipe } from 'lodash/fp';
 import { ordNumber, contramap } from 'fp-ts/es6/Ord';
 import { sort } from 'fp-ts/es6/Array';
 import { Content, Id } from './type';
@@ -16,9 +16,10 @@ export const sortByContentRef = (hits: Content[], refsInOrder: Id[] = []): Conte
   const compareContent = contramap(
     pipe(
       getContentRefs,
-      getSortingScore(refsInOrder)
+      getSortingScore(refsInOrder),
+      score => -score
     )
   )(ordNumber);
 
-  return sort(compareContent)(hits.reverse()).reverse();
+  return sort(compareContent)(hits);
 };
